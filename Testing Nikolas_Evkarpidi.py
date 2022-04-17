@@ -113,6 +113,7 @@ for i in range(1, n):
     for j in range(len(values)):
         if recommendation_df.head(3).astype('int64').values[j][1] in (inputPreferences['GameID'].tolist()):
             count += 1
+            break
             # if our top-3 recommendation is in user's already played games,
             # then it is +1 point
 
