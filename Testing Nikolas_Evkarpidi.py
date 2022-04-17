@@ -8,20 +8,20 @@ import scipy.stats
 
 lines = []
 # Reading files and fixing the bugs in collected data
-with open('C:/Users/79181/PycharmProjects/pythonProject/user.csv', 'r') as readFile:
+with open('/user.csv', 'r') as readFile:
     reader = csv.reader(readFile)
     for row in reader:
         # all rows with len != 3 are wrongly inputed
         if len(row) == 3:
             lines.append(row)
 
-with open('C:/Users/79181/PycharmProjects/pythonProject/user_fixed.csv', 'w') as writeFile:
+with open('/user_fixed.csv', 'w') as writeFile:
     writer = csv.writer(writeFile)
     writer.writerows(lines)
 
 # Making up the final table with the data
-users_df = pd.read_csv("C:/Users/79181/PycharmProjects/pythonProject/user_fixed.csv")
-games_df = pd.read_csv("C:/Users/79181/PycharmProjects/pythonProject/games.csv")
+users_df = pd.read_csv("/user_fixed.csv")
+games_df = pd.read_csv("/games.csv")
 games_df = games_df.rename(columns=({'id_game': 'GameID'}))
 users_games_df = pd.merge(users_df, games_df,
                           on='GameID',
