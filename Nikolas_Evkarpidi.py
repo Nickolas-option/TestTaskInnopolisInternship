@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-# In[29]:
-
-
-#!/usr/bin/env python
 import csv
 import pandas as pd
 import scipy.stats
@@ -24,8 +18,6 @@ with open('/user_fixed.csv', 'w') as writeFile:
     writer.writerows(lines)
 
 
-# In[30]:
-
 
 # Making up the final table with the data
 users_df = pd.read_csv("/user_fixed.csv")
@@ -39,14 +31,11 @@ users_games_df = users_games_df.dropna()
 users_games_df = users_games_df.drop(columns=["genre", "price", "title"])
 
 
-# In[31]:
-
 
 # Input the user ID, to whom we want to suggest a game
 inputUser = 1
 
 
-# In[32]:
 
 
 inputPreferences = users_games_df[users_games_df['UserID'] == inputUser]
@@ -59,7 +48,6 @@ userSubsetGroup = userSubset.groupby(['UserID'])
 userSubsetGroup = sorted(userSubsetGroup, key=lambda x: len(x[1]), reverse=True)
 
 
-# In[33]:
 
 
 # Calculating Pearson Coefficient
@@ -80,7 +68,7 @@ for name, group in userSubsetGroup:
     # Let’s also put the current user group reviews in a list format
     tempGroupList = group['rating'].tolist()
 
-    no_constants = (np.asarray(tempRatingList) == np.asarray(tempRatingList)[0]).all()                        or                     (np.asarray(tempGroupList) == np.asarray(tempGroupList[0])).all()
+    no_constants = (np.asarray(tempRatingList) == np.asarray(tempRatingList)[0]).all() or (np.asarray(tempGroupList) == np.asarray(tempGroupList[0])).all()
     # Now let’s calculate the pearson correlation between two users
     if len(tempRatingList) > 1 and len(tempGroupList) > 1 and not no_constants:
         corr = scipy.stats.pearsonr(tempRatingList, tempGroupList)[0]
@@ -95,7 +83,6 @@ pearsonDF['UserID'] = pearsonDF.index
 pearsonDF.index = range(len(pearsonDF))
 
 
-# In[34]:
 
 
 topUsers = pearsonDF.sort_values(by='similarityIndex', ascending=False)
@@ -104,9 +91,6 @@ topUsersRating = topUsers.merge(users_games_df, left_on='UserID', right_on='User
 topUsersRating['weightedRating'] = topUsersRating['similarityIndex'] * topUsersRating['rating']
 tempTopUsersRating = topUsersRating.groupby('GameID').sum()[['similarityIndex', 'weightedRating']]
 tempTopUsersRating.columns = ['sum_similarityIndex', 'sum_weightedRating']
-
-
-# In[35]:
 
 
 recommendation_df = pd.DataFrame()
@@ -124,23 +108,11 @@ top_game = games_df[games_df['GameID'] == top_game]['title']
 print("The most confident recommendation:", top_game.to_string(index = False))
 
 
-# In[36]:
-
-
 games_to_recommend = recommendation_df['GameID'].astype('int64').values
 title_to_recommend = games_df[games_df['GameID'].isin(games_to_recommend.tolist())]['title']
 
 
 print("The list of games to recommend in no particular order:\n", title_to_recommend.to_string(index = False))
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 
